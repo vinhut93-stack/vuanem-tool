@@ -98,6 +98,21 @@
         }
         .btn-all:hover { background: #01579b; }
 
+        /* Nút Clear All màu đỏ nổi bật */
+        .btn-clear {
+            padding: 12px 20px;
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 13px;
+            display: none; /* Mặc định ẩn */
+        }
+        .btn-clear:hover { background: #b71c1c; }
+
         /* --- CẤU TRÚC TAG GIÁ --- */
         .grid-container { 
             display: grid; 
@@ -191,7 +206,8 @@
     <div class="control-group">
         <label>3. Hành động</label>
         <div class="btn-group">
-            <button class="btn-all" onclick="selectAll()">PRINT ALL</button>
+            <button id="btnAll" class="btn-all" onclick="selectAll()">PRINT ALL</button>
+            <button id="btnClear" class="btn-clear" onclick="clearAll()">XOÁ TẤT CẢ</button>
             <button class="btn-print" onclick="window.print()">
                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"></path></svg>
                 PRINT
@@ -203,7 +219,7 @@
 <div id="printArea" class="grid-container"></div>
 
 <footer class="no-print">
-    &copy; 2026 Vua Nệm - Version 2.2. Thiết kế bởi Phan Đinh Vi Nhựt.
+    &copy; 2026 Vua Nệm - Version 2.4. Thiết kế bởi Phan Đình Vi Nhựt.
 </footer>
 
 <script>
@@ -216,7 +232,7 @@
             const data = new Uint8Array(event.target.result);
             const wb = XLSX.read(data, {type: 'array'});
             dataInventory = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-            alert("🚀Bạn Đã thêm thành công " + dataInventory.length + " sản phẩm.");
+            alert("🚀 Tuyệt vời! Đã tải thành công " + dataInventory.length + " sản phẩm.");
         };
         reader.readAsArrayBuffer(e.target.files[0]);
     });
@@ -232,6 +248,15 @@
         listSelected = [...dataInventory];
         render();
         alert("✅ Đã thêm tất cả " + dataInventory.length + " sản phẩm vào danh sách in.");
+    }
+
+    // Hàm xóa toàn bộ danh sách chọn
+    function clearAll() {
+        if(confirm("Bạn có chắc chắn muốn xóa tất cả sản phẩm đang chuẩn bị in không?")) {
+            listSelected = [];
+            render();
+            handleSearch();
+        }
     }
 
     function handleSearch() {
@@ -268,7 +293,19 @@
 
     function render() {
         const box = document.getElementById('printArea');
+        const btnAll = document.getElementById('btnAll');
+        const btnClear = document.getElementById('btnClear');
         box.innerHTML = '';
+        
+        // Điều khiển hiển thị nút dựa trên trạng thái danh sách
+        if (listSelected.length > 0) {
+            btnAll.style.display = 'none';   // Ẩn nút chọn tất cả
+            btnClear.style.display = 'block'; // Hiện nút xóa tất cả
+        } else {
+            btnAll.style.display = 'block';  // Hiện nút chọn tất cả
+            btnClear.style.display = 'none';  // Ẩn nút xóa tất cả
+        }
+
         listSelected.forEach((item, idx) => {
             const card = document.createElement('div');
             card.className = 'tag-card';
