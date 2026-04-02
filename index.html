@@ -142,23 +142,22 @@
 
         .discount-tag { font-size: 19px; font-weight: bold; padding-bottom: 5px; }
 
-        .mat-box { text-align: center; text-transform: uppercase; line-height: 1.3; margin-top: 10px; }
+        .mat-box { text-align: center; text-transform: uppercase; line-height: 1.3; margin-top: 10px; flex-grow: 1; }
         .mat-label { font-size: 12px; font-weight: normal; }
         .mat-val { font-size: 13px; font-weight: bold; display: block; margin-top: 2px; }
 
-        /* Ô TRẮNG MÃ SKU - ĐÃ CHỈNH KHÔNG CÒN KẼ HỞ */
         .code-label { 
             background: #fff; color: #000; 
-            width: 100%; /* Chiều rộng 100% để khớp panel */
-            height: 0.8cm; /* Chiều cao cố định */
+            width: 100%;
+            height: 0.8cm; 
             display: flex; align-items: center; justify-content: center;
             font-size: 13px; font-weight: 600;
-            margin-top: auto; /* Đẩy xuống đáy panel trái */
+            margin-top: auto; 
             border-top: 0.5pt solid #000;
             box-sizing: border-box;
         }
 
-        .right-panel { width: 6.4cm; display: flex; flex-direction: column; }
+        .right-panel { width: 6.4cm; display: flex; flex-direction: column; position: relative; }
         
         .name-area { 
             height: 1.2cm; display: flex; align-items: center; justify-content: center;
@@ -166,18 +165,39 @@
             font-weight: 600; text-transform: uppercase; line-height: 1.2;
         }
         
-        .price-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .price-area { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding-bottom: 0.8cm; /* Chừa khoảng trống cho thanh giá cũ cố định ở dưới */
+        }
         .p-sale { font-size: 28px; font-weight: bold; margin: 0; color: #000; }
-        .p-bonus { font-size: 13px; font-weight: bold; color: #333; text-transform: uppercase; margin-top: 2px; }
+        
+        /* LOGIC: Giới hạn tối đa 3 dòng và tự động hiển thị dấu ... */
+        .p-bonus { 
+            font-size: 12px; font-weight: bold; color: #333; 
+            text-transform: uppercase; margin-top: 2px;
+            text-align: center; width: 100%; padding: 0 8px; box-sizing: border-box;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+            line-height: 1.2;
+            height: 3.6em; /* Cố định chiều cao tương đương 3 dòng để giữ layout */
+        }
 
-        /* THANH ĐEN GIÁ CŨ - KHỚP CHIỀU CAO VÀ VỊ TRÍ VỚI Ô TRẮNG */
         .old-price-bar {
             background: #000; color: #fff; 
-            height: 0.8cm; /* Chiều cao khớp ô trắng */
+            height: 0.8cm; 
+            width: 100%;
             display: flex; align-items: center; justify-content: center; 
             font-size: 14px; font-weight: bold;
-            margin-top: auto; /* Đẩy xuống đáy panel phải */
-            border-left: 0.5pt solid #fff; /* Tạo ranh giới siêu nhỏ nếu cần */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-left: 0.5pt solid #fff;
             box-sizing: border-box;
         }
         .p-old { text-decoration: line-through; font-weight: normal; margin-left: 5px; }
@@ -232,7 +252,7 @@
 <div id="printArea" class="grid-container"></div>
 
 <footer class="no-print">
-    &copy; 2026 Vua Nệm - Version 2.5. Thiết kế bởi Phan Đinh Vi Nhựt.
+    &copy; 2026 Vua Nệm - Version 2.6. Thiết kế bởi Phan Đinh Vi Nhựt.
 </footer>
 
 <script>
@@ -318,6 +338,7 @@
         }
 
         listSelected.forEach((item, idx) => {
+            const bonusText = item.bonus || '';
             const card = document.createElement('div');
             card.className = 'tag-card';
             card.innerHTML = `
@@ -331,12 +352,20 @@
                     <div class="name-area">${item.name || ''}</div>
                     <div class="price-area">
                         <p class="p-sale">${Number(item.price_sale || 0).toLocaleString()} đ</p>
-                        <p class="p-bonus">${item.bonus || ''}</p>
+                        <p class="p-bonus">${bonusText}</p>
                     </div>
                     <div class="old-price-bar">GIÁ CŨ: <span class="p-old">${Number(item.price || 0).toLocaleString()} đ</span></div>
                 </div>
             `;
             box.appendChild(card);
+
+            // --- BỔ SUNG LOGIC THEO YÊU CẦU: GIẢM SIZE CHỮ & THÊM DẤU ... ---
+            const bonusEl = card.querySelector('.p-bonus');
+            if (bonusEl.scrollHeight > bonusEl.clientHeight) {
+                // Bước 1: Giảm xuống 1px (từ 12px xuống 11px)
+                bonusEl.style.fontSize = "11px";
+                // Bước 2: Nếu vẫn còn vượt, CSS (-webkit-line-clamp) tự động hiện dấu ...
+            }
         });
     }
 
