@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Hệ thống In Tag Giá CGPK Vua Nệm - Phát triển bởi Vi Nhựt (VN5022)</title>
+    <title>Hệ thống In Tag Giá Vua Nệm - Phát triển bởi Vi Nhựt (VN5022)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         /* --- GIAO DIỆN HỆ THỐNG --- */
@@ -41,10 +41,9 @@
         }
         .sug-item { padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #f0f0f0; font-size: 13px; display: flex; justify-content: space-between; }
         .sug-item:hover { background: #f5f5f5; color: #1a237e; font-weight: bold; }
-        .sug-item.selected { background: #e8f5e9; color: #a5a5a5; opacity: 0.6; }
 
         .btn-group { display: flex; gap: 10px; }
-        .btn-print { padding: 12px 25px; background: #2e7d32; color: #fff; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(46,125,50,0.3); }
+        .btn-print { padding: 12px 25px; background: #2e7d32; color: #fff; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .btn-all { padding: 12px 20px; background: #0277bd; color: #fff; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; }
         .btn-clear { padding: 12px 20px; background: #d32f2f; color: #fff; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; display: none; }
 
@@ -77,42 +76,42 @@
             font-size: 13px; font-weight: 600; border-top: 0.5pt solid #000;
         }
 
-        /* Panel Phải (Căn đối không gian) */
+        /* Panel Phải (Phần quan trọng) */
         .right-panel { 
-            width: 6.4cm; height: 100%; display: flex; flex-direction: column; position: relative; 
+            width: 6.4cm; height: 100%; display: flex; flex-direction: column; position: relative;
         }
 
-        /* Vùng Tên: Nằm giữa đỉnh và giá */
+        /* Tên sản phẩm - Nằm ở phần trên */
         .name-container {
-            flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 10px;
+            height: 1.2cm; display: flex; align-items: center; justify-content: center; padding: 5px 10px 0;
         }
         .name-area { 
-            text-align: center; font-size: 14px; font-weight: 600; 
+            text-align: center; font-size: 13px; font-weight: 600; 
             text-transform: uppercase; line-height: 1.2;
             max-height: 2.4em; overflow: hidden;
         }
 
-        /* Vùng Giá Sale: Trọng tâm ở giữa dải trắng */
-        .price-sale-container {
-            height: 1.1cm; display: flex; align-items: center; justify-content: center;
+        /* Cụm trung tâm: Giá Sale và Bonus sát nhau */
+        .center-content-wrapper {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin-bottom: 0.8cm; /* Tránh đè lên dải đen giá cũ */
         }
-        .p-sale { font-size: 28px; font-weight: bold; margin: 0; color: #000; letter-spacing: -1px; }
 
-        /* Vùng Bonus: Nằm giữa giá sale và dải đen giá cũ */
+        .price-sale-container {
+            display: flex; align-items: center; justify-content: center;
+        }
+        .p-sale { font-size: 28px; font-weight: bold; margin: 0; color: #000; letter-spacing: -1px; line-height: 1; }
+
         .bonus-container {
-            flex: 1; display: flex; align-items: center; justify-content: center; 
-            padding: 0 8px; margin-bottom: 0.8cm; /* Chừa chỗ cho dải đen cố định */
+            display: flex; align-items: center; justify-content: center; 
+            padding: 0 8px; margin-top: 2px; /* Sát dưới giá sale */
         }
         .p-bonus { 
-            font-size: 13px; /* Mặc định 13px */
-            font-weight: bold; color: #333; text-transform: uppercase;
-            text-align: center; line-height: 1.2; 
-            height: 2.4em; /* Cố định 2 dòng */
-            display: -webkit-box;
-            -webkit-line-clamp: 2; 
-            -webkit-box-orient: vertical; 
-            overflow: hidden;
-            word-break: break-word;
+            font-size: 12px; font-weight: bold; color: #333; text-transform: uppercase;
+            text-align: center; line-height: 1.1; 
+            max-height: 2.2em; /* Giới hạn 2 dòng */
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
+            overflow: hidden; word-break: break-word;
         }
 
         /* Dải giá cũ đáy */
@@ -138,7 +137,7 @@
 
 <div id="header-top" class="no-print">
     <h3>Hệ thống In Tag Giá CGPK Tại Vua Nệm 2026</h3>
-    <p>Phát triển bởi <b>Phan Đinh Vi Nhựt</b> | Chuyên dùng cho Chuỗi cửa hàng Vua Nệm</p>
+    <p>Phát triển bởi <b>Phan Đinh Vi Nhựt</b> | Chuyên dùng cho chuỗi cửa hàng Vua Nệm</p>
 </div>
 
 <div id="controls" class="no-print">
@@ -168,14 +167,13 @@
 <div id="printArea" class="grid-container"></div>
 
 <footer class="no-print" style="text-align: center; padding: 20px; color: #888; font-size: 12px;">
-    &copy; 2026 Vua Nệm - Version 3.0. Thiết kế bởi Phan Đinh Vi Nhựt.
+    &copy; 2026 Vua Nệm - Version 3.1. Designed by Phan Đinh Vi Nhựt.
 </footer>
 
 <script>
     let dataInventory = [];
     let listSelected = [];
 
-    // Đọc file Excel
     document.getElementById('fileInp').addEventListener('change', function(e) {
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -253,22 +251,22 @@
                     <div class="name-container">
                         <div class="name-area">${item.name || ''}</div>
                     </div>
-                    <div class="price-sale-container">
-                        <p class="p-sale">${Number(item.price_sale || 0).toLocaleString()} đ</p>
-                    </div>
-                    <div class="bonus-container">
-                        <p class="p-bonus">${item.bonus || ''}</p>
+                    <div class="center-content-wrapper">
+                        <div class="price-sale-container">
+                            <p class="p-sale">${Number(item.price_sale || 0).toLocaleString()} đ</p>
+                        </div>
+                        <div class="bonus-container">
+                            <p class="p-bonus">${item.bonus || ''}</p>
+                        </div>
                     </div>
                     <div class="old-price-bar">GIÁ CŨ: <span class="p-old">${Number(item.price || 0).toLocaleString()} đ</span></div>
                 </div>
             `;
             box.appendChild(card);
 
-            // --- TỰ ĐỘNG GIẢM SIZE CHỮ CHO BONUS ---
             const bonusEl = card.querySelector('.p-bonus');
             if (bonusEl.scrollHeight > bonusEl.clientHeight) {
                 bonusEl.style.fontSize = "11px";
-                // Nếu vẫn tràn, CSS sẽ tự thêm dấu "..." ở dòng thứ 2
             }
         });
     }
