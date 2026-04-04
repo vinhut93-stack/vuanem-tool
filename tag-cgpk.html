@@ -60,6 +60,15 @@
             border-radius: 4px;
         }
 
+        /* Thêm style cho giá hiển thị trong gợi ý */
+        .sug-price {
+            color: #d32f2f;
+            font-weight: bold;
+            margin-left: auto;
+            margin-right: 10px;
+        }
+        .selected .sug-price { color: #bdc3c7; }
+
         .btn-group { display: flex; gap: 10px; }
         .btn-print { padding: 12px 25px; background: #2e7d32; color: #fff; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .btn-all { padding: 12px 20px; background: #0277bd; color: #fff; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; }
@@ -133,7 +142,7 @@
 <div id="printArea" class="grid-container"></div>
 
 <footer class="no-print" style="text-align: center; padding: 20px; color: #888; font-size: 12px;">
-    &copy; 2026 Vua Nệm - Version 3.3. Designed by Phan Đinh Vi Nhựt.
+    &copy; 2026 Vua Nệm - Version 3.4. Designed by Phan Đinh Vi Nhựt.
 </footer>
 
 <script>
@@ -161,14 +170,13 @@
         if(confirm("Xóa tất cả danh sách đang chọn?")) {
             listSelected = [];
             render();
-            updateSuggestions(); // Cập nhật lại danh sách gợi ý
+            updateSuggestions();
         }
     }
 
     const inp = document.getElementById('searchInput');
     const sug = document.getElementById('suggestions');
 
-    // Hàm cập nhật danh sách gợi ý tách riêng để tái sử dụng
     function updateSuggestions() {
         const key = inp.value.trim().toLowerCase();
         sug.innerHTML = '';
@@ -181,17 +189,27 @@
 
         if(filtered.length > 0) {
             filtered.forEach(item => {
-                const alreadySelected = listSelected.some(s => s.itemcode === item.itemcode);
+                // SO SÁNH CẢ MÃ VÀ GIÁ ĐỂ PHÂN BIỆT CÁC DÒNG CÙNG TÊN TRONG FILE NGUỒN
+                const alreadySelected = listSelected.some(s => 
+                    s.itemcode === item.itemcode && s.price_sale === item.price_sale
+                );
+                
                 const div = document.createElement('div');
                 div.className = 'sug-item' + (alreadySelected ? ' selected' : '');
-                div.innerHTML = `<span>🏷️ <b>${item.itemcode}</b> - ${item.name}</span>`;
+                
+                // Hiển thị: Mã - Tên - Giá Sale
+                const displayPrice = Number(item.price_sale || 0).toLocaleString() + ' đ';
+                div.innerHTML = `
+                    <span>🏷️ <b>${item.itemcode}</b> - ${item.name}</span>
+                    <span class="sug-price">${displayPrice}</span>
+                `;
                 
                 div.onclick = function(e) {
-                    e.stopPropagation(); // Ngăn sự kiện click lan ra ngoài
+                    e.stopPropagation();
                     if(!alreadySelected) {
                         listSelected.push(item);
                         render();
-                        updateSuggestions(); // Làm mới danh sách gợi ý (giữ chữ trong ô tìm kiếm)
+                        updateSuggestions(); 
                     }
                 };
                 sug.appendChild(div);
@@ -248,14 +266,12 @@
         });
     }
 
-    // Hàm xóa sp và cập nhật lại gợi ý ngay lập tức
     function removeFromList(index) {
         listSelected.splice(index, 1);
         render();
         updateSuggestions();
     }
 
-    // Chỉ ẩn gợi ý khi click ra ngoài vùng tìm kiếm
     document.addEventListener('click', (e) => { 
         if(!inp.contains(e.target) && !sug.contains(e.target)) {
             sug.style.display = 'none';
