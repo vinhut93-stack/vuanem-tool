@@ -8,6 +8,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css">
     <link href="https://fonts.googleapis.com/css2?family=Reddit+Sans+Condensed:wght@200..900&display=swap" rel="stylesheet">
     <style>
+/* Floating Action Buttons Styling */
+.fixed-actions {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 9999;
+}
+
+.action-fab {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.btn-top {
+    background-color: #3498db; /* Màu xanh cho nút lên đầu */
+}
+
+.btn-home {
+    background-color: var(--vuanem-red); /* Màu đỏ thương hiệu cho nút Home */
+}
+
+.action-fab:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    filter: brightness(1.1);
+}
+
+.action-fab svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Ẩn nút khi ở ngay đầu trang (Tùy chọn) */
+@media print {
+    .fixed-actions { display: none !important; }
+}
         :root { 
             --vuanem-blue: #A51C1A; 
             --vuanem-red: #C21D21; 
@@ -515,5 +563,14 @@
             }
         });
     </script>
+<div class="fixed-actions no-print">
+    <button class="action-fab btn-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Lên đầu trang">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    </button>
+    
+    <button class="action-fab btn-home" onclick="location.href='index.html'" title="Về trang chủ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    </button>
+</div>
 </body>
 </html>
