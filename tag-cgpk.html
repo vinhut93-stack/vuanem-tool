@@ -5,7 +5,49 @@
     <title>Hệ thống In Tag Giá Vua Nệm - Phát triển bởi Vi Nhựt (VN5022)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* --- GIAO DIỆN HỆ THỐNG (GIỮ NGUYÊN) --- */
+/* Style cho nhóm nút điều hướng nổi */
+.floating-controls {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 9999;
+}
+
+.fab-btn {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 2px solid white; /* Thêm viền trắng cho nổi bật */
+    background: #0d47a1;    /* Màu xanh đậm giống Header của Nhựt */
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.fab-btn:hover {
+    transform: scale(1.1);
+    background: #d32f2f;    /* Chuyển sang màu đỏ khi rà chuột vào */
+}
+
+.fab-btn svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: white;          /* Đảm bảo icon có màu trắng */
+    stroke-width: 2.5;
+}
+
+/* Ẩn nút khi in */
+@media print {
+    .floating-controls { display: none !important; }
+}        /* --- GIAO DIỆN HỆ THỐNG (GIỮ NGUYÊN) --- */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #eceff1; color: #333; }
         
         #header-top {
@@ -278,5 +320,14 @@
         }
     });
 </script>
+<div class="floating-controls no-print">
+    <button class="fab-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Lên đầu trang">
+        <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+    </button>
+    
+    <button class="fab-btn" onclick="location.href='index.html'" title="Về trang chủ">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    </button>
+</div>
 </body>
 </html>
